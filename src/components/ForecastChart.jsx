@@ -68,10 +68,7 @@ const ForecastChart = ({ list }) => {
   }
 
   return (
-    // Contenedor principal del gráfico con estilos base.
-    // La altura se gestiona desde el componente padre (App.jsx) con h-[300px] md:h-[350px].
-    // Este div tiene h-full para ocupar todo el espacio que App.jsx le asigne.
-    <div className="bg-gradient-to-b from-blue-50 to-blue-100 bg-opacity-80 p-4 rounded-xl shadow mt-6 w-full h-full mb-5 dark:from-gray-800 dark:to-gray-700 dark:text-white">
+    <div className="bg-gradient-to-b from-gray-100 to-gray-400 bg-opacity-80 p-4 rounded-xl shadow mt-6 w-full h-full mb-5 dark:from-gray-800 dark:to-gray-700 dark:text-white">
       <h3 className="text-blue-900 font-bold text-center mb-2 dark:text-blue-400">Pronóstico Diario</h3>
       
       {/* Contenedor explícito con altura fija para ResponsiveContainer.
@@ -90,11 +87,12 @@ const ForecastChart = ({ list }) => {
               axisLine={{ stroke: '#cccccc' }} 
               className="text-sm font-semibold"
             />
-            <YAxis 
-              unit="°C" 
-              tickLine={false} 
-              axisLine={false} 
+            <YAxis
+              unit="°C"
+              tickLine={false}
+              axisLine={false}
               domain={['dataMin - 5', 'dataMax + 5']}
+              tickFormatter={(value) => `${Math.round(value)}°C`}
               className="text-sm"
             />
             <Tooltip content={<CustomTooltip />} />

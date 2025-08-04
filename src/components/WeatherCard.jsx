@@ -15,7 +15,7 @@ const WeatherCard = ({ data }) => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 bg-opacity-80 text-blue-900 dark:text-white rounded-xl p-6 shadow-lg w-full max-w-sm text-center"
+      className="bg-gradient-to-b from-gray-50 to-gray-300 dark:from-gray-800 dark:to-gray-700 bg-opacity-80 text-blue-900 dark:text-white rounded-xl p-6 shadow-lg w-full max-w-sm text-center"
     >
       <h2 className="text-2xl font-semibold">{name}</h2>
       {animation ? (

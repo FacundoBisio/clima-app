@@ -90,7 +90,7 @@ function App() {
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
+      <div className="flex flex-col sm:flex-row gap-2 mb-3">
         <input
           type="text"
           placeholder="Ingresá una ciudad..."
@@ -106,6 +106,40 @@ function App() {
           Buscar
         </button>
       </div>
+
+      <div className="mb-6">
+        <button
+        onClick={async () => {
+          setErrorMessage('');
+          setLoading(true);
+          try {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+              const { latitude, longitude } = position.coords;
+              const res = await axios.get(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&lang=es&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+              );
+              setData(res.data);
+
+              const resForecast = await axios.get(
+                `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&lang=es&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+              );
+              setForecast(resForecast.data);
+            }, () => {
+              setErrorMessage("No se pudo acceder a la ubicación.");
+              setLoading(false);
+            });
+          } catch (err) {
+            setErrorMessage("Error obteniendo clima por ubicación.");
+          } finally {
+            setLoading(false);
+          }
+        }}
+        className="bg-gradient-to-b from-green-600 to-green-500 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-green-700 hover:shadow-lg active:bg-green-800 transition-all duration-300 ease-in-out transform hover:scale-105"
+      >
+        Clima Actual
+      </button>
+      </div>
+
 
       {errorMessage && (
         <motion.p

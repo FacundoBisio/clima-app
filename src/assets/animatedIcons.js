@@ -1,6 +1,7 @@
 import sun from './animations/sun.json';
 import moon from './animations/moon.json';
 import clouds from './animations/clouds.json';
+import partlyCloudy from './animations/partly-cloudy.json';
 import rain from './animations/rain.json';
 import thunder from './animations/thunder.json';
 import snow from './animations/snow.json';
@@ -15,8 +16,8 @@ const animatedIcons = {
   '01n': moon,
 
   // Few clouds
-  '02d': clouds,
-  '02n': clouds,
+  '02d': partlyCloudy,
+  '02n': partlyCloudy,
 
   // Scattered/broken/overcast clouds
   '03d': clouds,
