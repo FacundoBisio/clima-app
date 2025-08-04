@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+#  Weather App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+¡Tu aplicación interactiva del clima! Obtén información meteorológica actual y pronósticos diarios para cualquier ciudad del mundo.
 
-## Available Scripts
+## 🌟 Características
 
-In the project directory, you can run:
+* **Clima Actual:** Consulta la temperatura, sensación térmica, humedad y condiciones actuales de una ciudad.
 
-### `npm start`
+* **Pronóstico Diario:** Visualiza el pronóstico de temperatura máxima y mínima para los próximos 5 días con un gráfico interactivo.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* **Diseño Responsivo:** Disfruta de una experiencia de usuario fluida en dispositivos móviles y de escritorio.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **Animaciones y Transiciones:** Interfaz de usuario dinámica con efectos sutiles.
 
-### `npm test`
+* **Búsqueda Rápida:** Ingresa el nombre de la ciudad y obtén resultados al instante.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* **Mensajes de Error:** Manejo amigable de errores para ciudades no encontradas.
 
-### `npm run build`
+## 🛠️ Tecnologías Utilizadas
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* **React:** Biblioteca de JavaScript para construir interfaces de usuario.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* **Tailwind CSS:** Framework de CSS para un desarrollo rápido y diseño responsivo.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* **Recharts:** Librería de gráficos composables construida con React y D3.
 
-### `npm run eject`
+* **Axios:** Cliente HTTP basado en promesas para realizar solicitudes a la API.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* **Framer Motion:** Librería de React para animaciones.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* **react-simple-typewriter:** Componente para efectos de texto de máquina de escribir.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* **Moment.js:** Librería para parsear, validar, manipular y formatear fechas.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* **OpenWeatherMap API:** Fuente de datos meteorológicos.
 
-## Learn More
+## 🚀 Instalación y Ejecución Local
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Sigue estos pasos para configurar y ejecutar el proyecto en tu máquina local:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1.  **Clona el repositorio:**
 
-### Code Splitting
+    ```
+    git clone <URL_DE_TU_REPOSITORIO>
+    cd clima-app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2.  **Instala las dependencias:**
+    Asegúrate de tener [Node.js](https://nodejs.org/) y [npm](https://www.npmjs.com/) (o [Yarn](https://yarnpkg.com/)) instalados.
 
-### Making a Progressive Web App
+    ```
+    npm install
+    # o si usas Yarn
+    yarn install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    **Importante:** Si tuviste problemas con `moment.js` previamente, es una buena idea limpiar la caché y reinstalar:
 
-### Deployment
+    ```
+    # Para npm
+    npm cache clean --force
+    rm -rf node_modules package-lock.json # En Windows: rmdir /s /q node_modules & del package-lock.json
+    npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    # Para Yarn
+    yarn cache clean
+    rm -rf node_modules yarn.lock # En Windows: rmdir /s /q node_modules & del yarn.lock
+    yarn install
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    ```
+
+3.  **Configura tu API Key de OpenWeatherMap:**
+
+    * Regístrate en [OpenWeatherMap](https://openweathermap.org/) y obtén una API Key gratuita.
+
+    * Crea un archivo `.env` en la raíz de tu proyecto (al mismo nivel que `package.json`).
+
+    * Añade tu API Key de esta manera:
+
+        ```
+        REACT_APP_WEATHER_API_KEY=TU_API_KEY_AQUI
+
+
+        ```
+
+        Reemplaza `TU_API_KEY_AQUI` con tu clave real.
+
+4.  **Inicia la aplicación:**
+
+    ```
+    npm start
+    # o si usas Yarn
+    yarn start
+
+
+    ```
+
+    Esto abrirá la aplicación en tu navegador en `http://localhost:3000`.
+
+## 🖥️ Uso
+
+* Simplemente ingresa el nombre de una ciudad en el campo de búsqueda.
+
+* Presiona "Buscar" o la tecla Enter para obtener la información meteorológica.
+
+* La aplicación mostrará la información actual y un gráfico de pronóstico diario.
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
