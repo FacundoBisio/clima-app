@@ -1,10 +1,11 @@
-import React from 'react';
-import { loadFull } from 'tsparticles';
-import { Particles } from 'react-tsparticles';
+// src/components/ParticlesBackground.jsx
+import React from "react";
+import Particles from "react-tsparticles";
+import { loadBasic } from "tsparticles-basic";
 
 const ParticlesBackground = () => {
-  const particlesInit = async (main) => {
-    await loadFull(main);
+  const particlesInit = async (engine) => {
+    await loadBasic(engine);
   };
 
   return (
@@ -13,34 +14,19 @@ const ParticlesBackground = () => {
       init={particlesInit}
       options={{
         background: {
-          color: {
-            value: 'transparent',
-          },
+          color: { value: "transparent" },
         },
-        fullScreen: {
-          enable: true,
-          zIndex: -1,
-        },
+        fullScreen: { enable: true, zIndex: -1 },
         particles: {
-          number: { value: 50 },
+          number: { value: 60 },
           size: { value: 3 },
-          move: {
-            enable: true,
-            speed: 0.4,
-          },
           opacity: { value: 0.5 },
-          shape: { type: 'circle' },
+          move: { enable: true, speed: 0.3 },
+          shape: { type: "circle" },
         },
         interactivity: {
-          events: {
-            onHover: { enable: true, mode: 'repulse' },
-          },
-          modes: {
-            repulse: {
-              distance: 50,
-              duration: 0.4,
-            },
-          },
+          events: { onHover: { enable: true, mode: "repulse" } },
+          modes: { repulse: { distance: 40, duration: 0.4 } },
         },
       }}
     />

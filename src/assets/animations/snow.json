@@ -1,0 +1,4 @@
+{
+  "v":"5.7.6","fr":30,"ip":0,"op":60,
+  "w":200,"h":200,"nm":"snow","ddd":0,"assets":[],"layers":[{"ddd":0,"ty":4,"shapes":[{"ty":"fl","c":{"a":0,"k":[1,1,1,1]},"nm":"Snowflake1"},{"ty":"fl","c":{"a":0,"k":[1,1,1,1]},"nm":"Snowflake2"}]}]
+}

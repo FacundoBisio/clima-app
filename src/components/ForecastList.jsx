@@ -12,7 +12,9 @@ const getNext4Days = (list) => {
       month: 'short',
     });
 
-    if (!days[date]) {
+  if (!days[date]) {
+    const hour = new Date(item.dt_txt).getHours();
+    if (hour === 12) { // Tomamos el ícono del mediodía
       days[date] = {
         tempSum: item.main.temp,
         count: 1,
@@ -20,9 +22,22 @@ const getNext4Days = (list) => {
         description: item.weather[0].description,
       };
     } else {
-      days[date].tempSum += item.main.temp;
-      days[date].count += 1;
+      days[date] = {
+        tempSum: item.main.temp,
+        count: 1,
+        icon: null,
+        description: '',
+      };
     }
+  } else {
+    days[date].tempSum += item.main.temp;
+    days[date].count += 1;
+    const hour = new Date(item.dt_txt).getHours();
+    if (hour === 12 && !days[date].icon) {
+      days[date].icon = item.weather[0].icon;
+      days[date].description = item.weather[0].description;
+    }
+  }
   });
 
   return Object.entries(days)
@@ -39,7 +54,7 @@ const ForecastList = ({ list }) => {
   const forecastDays = getNext4Days(list);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 w-full max-w-[800px]">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 w-full max-w-[800px] dark:from-gray-800 dark:to-gray-700 dark:text-white">
       {forecastDays.map((day, i) => (
         <ForecastCard key={i} {...day} i={i} />
       ))}

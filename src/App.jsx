@@ -1,19 +1,25 @@
-// src/App.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 import { motion } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import WeatherCard from './components/WeatherCard';
 import ForecastList from './components/ForecastList';
-// import ParticleBackground from './components/ParticlesBackground'; // Comentado si no se usa
 import ForecastChart from './components/ForecastChart';
+import DarkModeToggle from './components/DarkModeToggle';
 
 function App() {
   const [city, setCity] = useState('');
   const [data, setData] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // Estado para mensajes de error
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleDark = () => {
+    document.documentElement.classList.toggle('dark');
+    setIsDark(!isDark);
+  };
 
   const fetchWeather = async () => {
     if (!city) {
@@ -23,7 +29,7 @@ function App() {
     setLoading(true);
     setData(null);
     setForecast(null);
-    setErrorMessage(''); // Limpiar errores anteriores
+    setErrorMessage('');
     try {
       const res = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=es&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
@@ -42,6 +48,7 @@ function App() {
   };
 
   const getBgColor = (type) => {
+    if (isDark) return 'from-gray-900 to-gray-800';
     switch (type) {
       case 'Clear': return 'from-yellow-200 to-blue-400';
       case 'Clouds': return 'from-gray-300 to-blue-500';
@@ -55,16 +62,19 @@ function App() {
   const bgColor = getBgColor(weatherType);
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center bg-gradient-to-br ${bgColor} text-white px-4 w-full`}>
-      {/* Background de Partículas, si lo tienes implementado y visible */}
-      {/* <ParticleBackground /> */}
+    <div className={`min-h-screen flex flex-col items-center justify-center bg-gradient-to-br ${bgColor} text-white dark:text-white px-4 w-full`}>
 
-      <div className="flex items-center justify-center space-x-4 mt-10"> 
-        <img src="/Weather.png" alt="Logo" className="w-24 h-24" />
-        <h1 className="text-3xl font-bold">Weather App</h1>
+
+      {/* Toggle modo oscuro como switch */}
+      <div className="absolute top-4 right-4">
+        <DarkModeToggle isDark={isDark} toggleDark={toggleDark} />
       </div>
 
-      {/* Typewriter para ejemplos */}
+      <div className="flex items-center justify-center space-x-4 mt-10">
+        <img src="/Weather.png" alt="Logo" className="w-24 h-24 weather-icon-pulse" />
+        <h1 className="text-3xl font-bold dark:text-white">Weather App</h1>
+      </div>
+
       <div className="text-center mb-4">
         <span className="text-white text-md">Ejemplo:</span>
         <p className="text-white font-semibold text-xl h-6">
@@ -80,12 +90,11 @@ function App() {
         </p>
       </div>
 
-      {/* Input y Botón de Búsqueda */}
       <div className="flex flex-col sm:flex-row gap-2 mb-6">
         <input
           type="text"
           placeholder="Ingresá una ciudad..."
-          className="px-4 py-2 rounded text-black outline-none shadow focus:ring-1 focus:ring-gray-300 transition-all w-full sm:w-[300px]"
+          className="px-4 py-2 rounded dark:bg-gray-700 dark:text-white text-black outline-none shadow focus:ring-1 focus:ring-gray-300 transition-all w-full sm:w-[300px]"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
@@ -98,7 +107,6 @@ function App() {
         </button>
       </div>
 
-      {/* Mensaje de error */}
       {errorMessage && (
         <motion.p
           initial={{ opacity: 0, y: -20 }}
@@ -109,7 +117,6 @@ function App() {
         </motion.p>
       )}
 
-      {/* Indicador de carga */}
       {loading && (
         <motion.div
           className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mt-4"
@@ -120,10 +127,9 @@ function App() {
       )}
 
       {data && <WeatherCard data={data} />}
-      
+
       {forecast && <ForecastList list={forecast.list} />}
 
-      {/* Contenedor del gráfico que ahora tiene ancho y alto explícitos para ResponsiveContainer */}
       {forecast && forecast.list && forecast.list.length > 0 && (
         <div className="w-full max-w-[1000px] h-full">
           <ForecastChart list={forecast.list} />
@@ -133,4 +139,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

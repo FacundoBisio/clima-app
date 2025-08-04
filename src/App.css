@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.95;
+  }
+}
+
+.weather-icon-pulse {
+  animation: pulse 3s infinite ease-in-out;
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+.animate-pulse {
+  animation: pulse 2s infinite;
+}

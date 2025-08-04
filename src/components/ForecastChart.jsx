@@ -16,16 +16,16 @@ import 'moment/locale/es';
 // Componente de Tooltip Personalizado
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const formattedDate = moment(label).locale('es').format('dddd, D [de] MMMM');
+    const formattedDate = moment(label).utcOffset(-180).locale('es').format('ddd D MMM');
 
     const tempMax = payload.find(p => p.dataKey === 'maxTemp');
     const tempMin = payload.find(p => p.dataKey === 'minTemp');
 
     return (
-      <div className="custom-tooltip bg-white bg-opacity-90 p-3 rounded-md shadow-lg border border-gray-200">
-        <p className="label font-bold text-blue-900">{formattedDate}</p>
-        {tempMax && <p className="desc text-red-600">Temperatura Máxima: {tempMax.value}°C</p>}
-        {tempMin && <p className="desc text-blue-600">Temperatura Mínima: {tempMin.value}°C</p>}
+      <div className="custom-tooltip bg-white bg-opacity-90 p-3 rounded-md shadow-lg border border-gray-200 dark:bg-gray-800 dark:to-gray-700 dark:text-white">
+        <p className="label font-bold text-blue-900 dark:from-gray-800 dark:to-gray-700 dark:text-white">{formattedDate}</p>
+        {tempMax && <p className="desc text-red-600 dark:text-red-400">Temperatura Máxima: {tempMax.value}°C</p>}
+        {tempMin && <p className="desc text-blue-600 dark:text-blue-400">Temperatura Mínima: {tempMin.value}°C</p>}
       </div>
     );
   }
@@ -36,7 +36,7 @@ const ForecastChart = ({ list }) => {
   const getDailyForecastData = (fullList) => {
     const dailyDataMap = new Map();
     fullList.forEach(item => {
-      const dateKey = moment(item.dt_txt).format('YYYY-MM-DD');
+      const dateKey = moment(item.dt_txt).utcOffset(-180).format('YYYY-MM-DD');
       
       if (!dailyDataMap.has(dateKey)) {
         dailyDataMap.set(dateKey, {
@@ -53,6 +53,7 @@ const ForecastChart = ({ list }) => {
 
     return Array.from(dailyDataMap.values())
       .sort((a, b) => a.date.getTime() - b.date.getTime())
+      .filter(day => moment(day.date).isSameOrAfter(moment(), 'day'))
       .slice(0, 5)
       .map(day => ({
         ...day,
@@ -63,15 +64,15 @@ const ForecastChart = ({ list }) => {
   const dailyForecastData = getDailyForecastData(list);
 
   if (!dailyForecastData || dailyForecastData.length === 0) {
-    return <p className="text-center text-gray-300 mt-8">No hay datos de pronóstico para el gráfico.</p>;
+    return <p className="text-center text-gray-300 mt-8 dark:from-gray-800 dark:to-gray-700 dark:text-white">No hay datos de pronóstico para el gráfico.</p>;
   }
 
   return (
     // Contenedor principal del gráfico con estilos base.
     // La altura se gestiona desde el componente padre (App.jsx) con h-[300px] md:h-[350px].
     // Este div tiene h-full para ocupar todo el espacio que App.jsx le asigne.
-    <div className="bg-gradient-to-b from-blue-50 to-blue-100 bg-opacity-80 p-4 rounded-xl shadow mt-6 w-full h-full mb-5">
-      <h3 className="text-blue-900 font-bold text-center mb-2">Pronóstico Diario</h3>
+    <div className="bg-gradient-to-b from-blue-50 to-blue-100 bg-opacity-80 p-4 rounded-xl shadow mt-6 w-full h-full mb-5 dark:from-gray-800 dark:to-gray-700 dark:text-white">
+      <h3 className="text-blue-900 font-bold text-center mb-2 dark:text-blue-400">Pronóstico Diario</h3>
       
       {/* Contenedor explícito con altura fija para ResponsiveContainer.
           Esto resuelve el error 'style' y permite la adaptabilidad. */}
