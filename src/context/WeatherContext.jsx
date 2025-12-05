@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState } from 'react';
 const WeatherContext = createContext();
 
 export const WeatherProvider = ({ children }) => {
-  // Estado inicial vacío
   const [searchParams, setSearchParams] = useState(null);
 
   const searchCity = (city) => {
@@ -12,9 +11,17 @@ export const WeatherProvider = ({ children }) => {
 
   const searchLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocalización no soportada");
+      alert("Tu navegador no soporta geolocalización.");
       return;
     }
+
+    // OPCIONES AJUSTADAS PARA MÓVIL
+    const options = {
+      enableHighAccuracy: false, // Falso para usar red/wifi (más rápido y compatible)
+      timeout: 10000,            // Damos 10 segundos de tiempo (antes 5)
+      maximumAge: 30000          // Aceptamos una caché de hasta 30 seg
+    };
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setSearchParams({
@@ -24,9 +31,17 @@ export const WeatherProvider = ({ children }) => {
         });
       },
       (error) => {
-        console.error(error);
-        alert("No se pudo obtener la ubicación");
-      }
+        // Mostramos el error real para que puedas depurar en el celu
+        console.error("Geo Error:", error);
+        let msg = `Error (${error.code}): ${error.message}`;
+        
+        if (error.code === 1) msg = "Permiso denegado. Revisa la configuración del sitio en Chrome (candadito).";
+        else if (error.code === 2) msg = "Ubicación no disponible (¿GPS apagado?).";
+        else if (error.code === 3) msg = "Se agotó el tiempo esperando al GPS.";
+
+        alert(msg);
+      },
+      options
     );
   };
 

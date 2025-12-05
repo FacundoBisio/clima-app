@@ -11,9 +11,11 @@ const ThemeToggle = ({ theme, toggleTheme }) => {
       className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
         isDark ? 'bg-gray-700' : 'bg-blue-400'
       }`}
-      aria-label="Toggle Dark Mode"
+      // Mejora de Accesibilidad: Etiqueta dinámica
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+      title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
     >
-      <span className="sr-only">Cambiar tema</span>
+      <span className="sr-only">{isDark ? "Activar modo claro" : "Activar modo oscuro"}</span>
       <motion.div
         layout
         transition={{ type: "spring", stiffness: 700, damping: 30 }}
@@ -22,9 +24,9 @@ const ThemeToggle = ({ theme, toggleTheme }) => {
         }`}
       >
         {isDark ? (
-          <MoonIcon className="h-4 w-4 text-gray-800" />
+          <MoonIcon className="h-4 w-4 text-gray-800" aria-hidden="true" />
         ) : (
-          <SunIcon className="h-4 w-4 text-yellow-500" />
+          <SunIcon className="h-4 w-4 text-yellow-500" aria-hidden="true" />
         )}
       </motion.div>
     </button>
