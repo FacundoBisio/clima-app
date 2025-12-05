@@ -1,31 +1,27 @@
-// src/components/ForecastChart.jsx
 import React from 'react';
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  Legend,
 } from 'recharts';
 import moment from 'moment';
 import 'moment/locale/es';
 
-// Componente de Tooltip Personalizado
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const formattedDate = moment(label).utcOffset(-180).locale('es').format('ddd D MMM');
-
-    const tempMax = payload.find(p => p.dataKey === 'maxTemp');
-    const tempMin = payload.find(p => p.dataKey === 'minTemp');
-
     return (
-      <div className="custom-tooltip bg-white bg-opacity-90 p-3 rounded-md shadow-lg border border-gray-200 dark:bg-gray-800 dark:to-gray-700 dark:text-white">
-        <p className="label font-bold text-blue-900 dark:from-gray-800 dark:to-gray-700 dark:text-white">{formattedDate}</p>
-        {tempMax && <p className="desc text-red-600 dark:text-red-400">Temperatura Máxima: {tempMax.value}°C</p>}
-        {tempMin && <p className="desc text-blue-600 dark:text-blue-400">Temperatura Mínima: {tempMin.value}°C</p>}
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-3 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
+        <p className="font-bold text-gray-800 dark:text-gray-200 mb-1">{label}</p>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Temp: <span className="font-bold text-gray-900 dark:text-white">{payload[0].value}°C</span>
+          </p>
+        </div>
       </div>
     );
   }
@@ -33,92 +29,69 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const ForecastChart = ({ list }) => {
-  const getDailyForecastData = (fullList) => {
-    const dailyDataMap = new Map();
-    fullList.forEach(item => {
-      const dateKey = moment(item.dt_txt).utcOffset(-180).format('YYYY-MM-DD');
-      
-      if (!dailyDataMap.has(dateKey)) {
-        dailyDataMap.set(dateKey, {
-          date: moment(item.dt_txt).toDate(),
-          minTemp: item.main.temp_min,
-          maxTemp: item.main.temp_max,
-        });
-      } else {
-        const existingData = dailyDataMap.get(dateKey);
-        existingData.minTemp = Math.min(existingData.minTemp, item.main.temp_min);
-        existingData.maxTemp = Math.max(existingData.maxTemp, item.main.temp_max);
+  const processData = (fullList) => {
+    const dailyData = fullList.reduce((acc, item) => {
+      const date = moment(item.dt_txt).format('YYYY-MM-DD');
+      if (!acc[date]) {
+        acc[date] = { tempSum: 0, count: 0, date: item.dt_txt };
       }
-    });
+      acc[date].tempSum += item.main.temp;
+      acc[date].count += 1;
+      return acc;
+    }, {});
 
-    return Array.from(dailyDataMap.values())
-      .sort((a, b) => a.date.getTime() - b.date.getTime())
-      .filter(day => moment(day.date).isSameOrAfter(moment(), 'day'))
+    return Object.values(dailyData)
       .slice(0, 5)
       .map(day => ({
-        ...day,
-        formattedDate: moment(day.date).locale('es').format('ddd D MMM'),
+        date: moment(day.date).locale('es').format('ddd D'),
+        temp: Math.round(day.tempSum / day.count),
       }));
   };
 
-  const dailyForecastData = getDailyForecastData(list);
-
-  if (!dailyForecastData || dailyForecastData.length === 0) {
-    return <p className="text-center text-gray-300 mt-8 dark:from-gray-800 dark:to-gray-700 dark:text-white">No hay datos de pronóstico para el gráfico.</p>;
-  }
+  const chartData = processData(list);
 
   return (
-    <div className="bg-gradient-to-b from-gray-100 to-gray-400 bg-opacity-80 p-4 rounded-xl shadow mt-6 w-full h-full mb-5 dark:from-gray-800 dark:to-gray-700 dark:text-white">
-      <h3 className="text-blue-900 font-bold text-center mb-2 dark:text-blue-400">Pronóstico Diario</h3>
+    <div className="w-full h-full min-h-[250px] bg-white/30 dark:bg-gray-800/30 rounded-2xl p-4 backdrop-blur-md border border-white/10 shadow-inner flex flex-col">
+      <div className="flex justify-between items-center mb-4 px-2">
+        <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Tendencia de Temperatura</h3>
+      </div>
       
-      {/* Contenedor explícito con altura fija para ResponsiveContainer.
-          Esto resuelve el error 'style' y permite la adaptabilidad. */}
-      <div style={{ width: '100%', height: '250px' }}> {/* <--- Altura fija explícita para ResponsiveContainer */}
+      <div className="flex-grow w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart 
-            data={dailyForecastData} 
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            // Ya no es necesario width ni height aquí, ResponsiveContainer los manejará
-          >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e0e0e0" />
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6}/>
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
             <XAxis 
-              dataKey="formattedDate" 
+              dataKey="date" 
+              axisLine={false} 
               tickLine={false} 
-              axisLine={{ stroke: '#cccccc' }} 
-              className="text-sm font-semibold"
+              tick={{ fill: '#9ca3af', fontSize: 12, fontWeight: 500 }} 
+              dy={10}
             />
-            <YAxis
-              unit="°C"
+            <YAxis 
+              axisLine={false} 
               tickLine={false}
-              axisLine={false}
-              domain={['dataMin - 5', 'dataMax + 5']}
-              tickFormatter={(value) => `${Math.round(value)}°C`}
-              className="text-sm"
+              tick={{ fill: '#9ca3af', fontSize: 11 }}
+              domain={['dataMin - 2', 'dataMax + 2']} 
             />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-
-            <Line
-              type="monotone"
-              dataKey="maxTemp"
-              stroke="#e03e3e"
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '4 4' }} />
+            <Area 
+              type="monotone" 
+              dataKey="temp" 
+              stroke="#3b82f6" 
               strokeWidth={3}
-              dot={{ r: 4, fill: '#e03e3e' }}
-              activeDot={{ r: 6 }}
-              name="Máxima"
+              fillOpacity={1} 
+              fill="url(#colorTemp)" 
+              animationDuration={1500}
             />
-            <Line
-              type="monotone"
-              dataKey="minTemp"
-              stroke="#3a60a7"
-              strokeWidth={3}
-              dot={{ r: 4, fill: '#3a60a7' }}
-              activeDot={{ r: 6 }}
-              name="Mínima"
-            />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
-      </div> {/* Fin del div con altura fija para ResponsiveContainer */}
+      </div>
     </div>
   );
 };
