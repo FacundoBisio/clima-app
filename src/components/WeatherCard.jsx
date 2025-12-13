@@ -15,18 +15,21 @@ const WeatherCard = ({ data }) => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden bg-white/70 dark:bg-gray-800/60 text-gray-800 dark:text-white rounded-3xl p-8 shadow-2xl w-full max-w-sm text-center backdrop-blur-xl border border-white/40 dark:border-white/10"
+      className="relative overflow-hidden bg-white/70 dark:bg-gray-800/60 text-gray-800 dark:text-white rounded-3xl p-6 md:p-8 shadow-2xl w-full max-w-sm text-center backdrop-blur-xl border border-white/40 dark:border-white/10"
     >
       {/* Efecto de resplandor de fondo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-blue-400/30 dark:bg-blue-500/20 rounded-full blur-3xl -z-10"></div>
 
-      <h2 className="text-3xl font-bold tracking-tight mb-2">{name}</h2>
+      {/* CAMBIO AQUI: Texto responsive (chico en mobile, grande en desktop) */}
+      <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2 truncate">
+        {name}
+      </h2>
       
       <div className="my-6 drop-shadow-lg">
         {animation ? (
-          <Lottie animationData={animation} loop className="mx-auto h-40 w-40" />
+          <Lottie animationData={animation} loop className="mx-auto h-32 w-32 md:h-40 md:w-40" />
         ) : (
-          <img src={fallback} alt="weather" className="mx-auto h-32 w-32" />
+          <img src={fallback} alt="weather" className="mx-auto h-28 w-28 md:h-32 md:w-32" />
         )}
       </div>
       
